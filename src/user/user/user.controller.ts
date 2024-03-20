@@ -8,12 +8,24 @@ import {
   Query,
   Redirect,
   Req,
+  Res,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { url } from 'inspector';
 
 @Controller('/api/users')
 export class UserController {
+  @Get('/set-cookie')
+  setCookie(@Query('name') name: string, @Res() response: Response) {
+    response.cookie('name', name)
+    response.status(200).json({ message: `Set cookie for ${name}` });
+  }
+
+  @Get('/get-cookie')
+  getCookie(@Req() request: Request): string | undefined {
+    return request.cookies['name'];
+  }
+
   @Get('sample-response')
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
@@ -25,9 +37,9 @@ export class UserController {
   @Redirect()
   redirect(): HttpRedirectResponse {
     return {
-        url: '/api/users/sample-response',
-        statusCode: 301,
-    }
+      url: '/api/users/sample-response',
+      statusCode: 301,
+    };
   }
 
   @Post()
