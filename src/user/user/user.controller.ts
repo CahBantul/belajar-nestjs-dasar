@@ -11,10 +11,18 @@ import {
   Res,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { url } from 'inspector';
 
 @Controller('/api/users')
 export class UserController {
+
+    @Get('/view-hello')
+    viewHello(@Query('name') name: string, @Res() response: Response){
+        response.render('index.html', {
+            title: "halo",
+            name: "Nozami"
+        })
+    }
+
   @Get('/set-cookie')
   setCookie(@Query('name') name: string, @Res() response: Response) {
     response.cookie('name', name)
