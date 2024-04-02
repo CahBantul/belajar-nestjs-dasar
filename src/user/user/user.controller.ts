@@ -11,9 +11,14 @@ import {
   Res,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { UserService } from './user.service';
 
 @Controller('/api/users')
 export class UserController {
+  // @Inject()
+  // @Optional()
+  // private service: UserService;
+  constructor(private service: UserService) {}
   @Get('/view-hello')
   viewHello(@Query('name') name: string, @Res() response: Response) {
     response.render('index.html', {
@@ -55,12 +60,8 @@ export class UserController {
   }
 
   @Get('/hello')
-  sayHello(@Query('name') name: string) {
-    if (name === undefined) {
-      return 'Please pass a name as query parameter like /hello?name=John';
-    } else {
-      return `Hello, ${name}!`;
-    }
+  async sayHello(@Query('name') name: string): Promise<string> {
+    return this.service.sayHello(name);
   }
 
   @Get('/:id')
